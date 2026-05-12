@@ -6,7 +6,6 @@ import { Card, Title, Text, Table } from "@mantine/core";
 export const Historical = ({ history, setHistory, apiUrl }) => {
   useEffect(() => {
     axios.get(`${apiUrl}/api/air-quality-historical`).then((response) => {
-      console.log(response.data);
       setHistory(response.data.data);
     });
   }, []);

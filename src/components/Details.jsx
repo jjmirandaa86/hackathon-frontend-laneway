@@ -1,9 +1,10 @@
-import React from 'react'
-import { Card, Group, Title, Text, Badge, Paper, Grid } from '@mantine/core'
+import React from "react";
+import { Card, Group, Title, Text, Badge, Paper, Grid } from "@mantine/core";
 
 export const Details = ({ airData, status, searchedCity }) => {
   return (
-    <>{airData && status && (
+    <>
+      {airData && status && (
         <Card shadow="lg" radius="lg" p="xl" mb="xl" withBorder>
           <Group position="apart" mb="md">
             <div>
@@ -42,6 +43,7 @@ export const Details = ({ airData, status, searchedCity }) => {
             ))}
           </Grid>
         </Card>
-      )}</>
-  )
-}
+      )}
+    </>
+  );
+};

@@ -43,7 +43,6 @@ export const Form = ({
     axios
       .get(url)
       .then((response) => {
-        console.log(response.data.data);
         setAirData(response.data);
         setStatus(getAirQualityStatus(response.data.data.overall_aqi));
         setSearchedCity(city);
@@ -76,11 +75,9 @@ export const Form = ({
         };
       })
       .then((dataToSave) => {
-        console.log(dataToSave);
         return axios.post(`${apiUrl}/api/air-quality`, dataToSave);
       })
       .then((saveResponse) => {
-        console.log("guardado");
         return axios.get(`${apiUrl}/api/air-quality-historical`);
       })
       .then((historyResponse) => {
