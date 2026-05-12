@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# Hackathon Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React frontend for checking air quality by city. The app lets a user search for a city, shows the current air quality details, saves the result through the backend API, and displays the latest historical searches stored in the database.
 
-## Available Scripts
+## What The App Does
 
-In the project directory, you can run:
+- Lets the user enter a city name.
+- Calls the Node backend to request air quality data.
+- Shows the AQI, health risk, and pollutant values for the selected city.
+- Saves the searched result in the backend database.
+- Loads and displays the last 10 saved searches.
+- Includes an optional AQI guide that explains each air quality level.
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- React
+- Mantine UI
+- Axios
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Backend Dependency
 
-### `npm test`
+This frontend expects the backend API to be running. By default, the API URL is configured as:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```env
+REACT_APP_API_URL=http://localhost:3003
+```
 
-### `npm run build`
+The backend should expose these endpoints:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```text
+GET  /api/air-quality?city=<city>
+POST /api/air-quality
+GET  /api/air-quality-historical
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Environment Variables
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Create or update `.env` in the project root:
 
-### `npm run eject`
+```env
+REACT_APP_API_URL=http://localhost:3003
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Important: in Create React App, frontend environment variables must start with `REACT_APP_`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+After changing `.env`, restart the development server.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Installation
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm install
+```
 
-## Learn More
+## Run The App
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## User Flow
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. User types a city.
+2. Frontend calls `GET /api/air-quality?city=<city>`.
+3. Backend consults the external air quality provider.
+4. Frontend shows the returned result.
+5. Frontend sends the formatted result to `POST /api/air-quality`.
+6. Backend stores the result in MySQL.
+7. Frontend refreshes `GET /api/air-quality-historical`.
+8. The historical table shows the latest saved searches.
