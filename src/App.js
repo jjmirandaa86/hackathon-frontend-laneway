@@ -58,9 +58,12 @@ function App() {
             status={status}
             searchedCity={searchedCity}
           />
-          <Button onClick={() => setShowInfo(!showInfo)}>
-            {showInfo ? "Hide AQI guide" : "Show AQI guide"}
-          </Button>
+          <Container fluid h={50}>
+            <Button onClick={() => setShowInfo(!showInfo)}>
+              {showInfo ? "Hide AQI guide" : "Show AQI guide"}
+            </Button>
+          </Container>
+
           {showInfo && <AirQualityInfo />}
           <Historical
             history={history}
