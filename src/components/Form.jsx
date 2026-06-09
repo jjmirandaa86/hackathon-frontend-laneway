@@ -11,80 +11,72 @@ import {
   Loader,
   Alert,
 } from "@mantine/core";
-import { getAirQualityStatus } from "../js/helpers";
+import { getAirQualityStatus, semiTransparentPanel } from "../js/helpers";
 
 export const Form = ({
-  city,
-  setCity,
-  loading,
-  setLoading,
+  showData,
+  setShowData,
+  searchedCity,
+  setSearchedCity,
   error,
   setError,
+  loading,
+  setLoading,
+  cityData,
+  setCityData,
+  weatherData,
+  setWeatherData,
   airData,
   setAirData,
-  setSearchedCity,
-  history,
-  setHistory,
   apiUrl,
-  setStatus,
 }) => {
   const handleSearch = async () => {
     setLoading(true);
     setError("");
+    setCityData(null);
     setAirData(null);
+    setWeatherData(null);
+    setShowData(false);
 
-    if (!city.trim()) {
+    if (!searchedCity.trim()) {
       setError("Please enter a city name.");
       return;
     }
 
-    const url = `${apiUrl}/api/air-quality?city=${encodeURIComponent(city)}`;
+    const url = `${apiUrl}/api/external?city=${encodeURIComponent(searchedCity)}`;
 
     axios
       .get(url)
       .then((response) => {
-        setAirData(response.data);
-        setStatus(getAirQualityStatus(response.data.data.overall_aqi));
-        setSearchedCity(city);
-        setHistory([
-          ...history,
-          {
-            city: city,
-            aqi: response.data.overall_aqi,
-            status: getAirQualityStatus(response.data.overall_aqi).label,
-            risk: getAirQualityStatus(response.data.overall_aqi).risk,
-            date: new Date().toLocaleString(),
-          },
-        ]);
-        return {
-          city,
-          overall_aqi: response.data.data.overall_aqi,
-          CO_concentration: response.data.data.CO.concentration,
-          CO_aqi: response.data.data.CO.aqi,
-          PM10_concentration: response.data.data.PM10.concentration,
-          PM10_aqi: response.data.data.PM10.aqi,
-          SO2_concentration: response.data.data.SO2.concentration,
-          SO2_aqi: response.data.data.SO2.aqi,
-          PM2_5_concentration: response.data.data["PM2.5"].concentration,
-          O3_concentration: response.data.data.O3.concentration,
-          O3_aqi: response.data.data.O3.aqi,
-          NO2_concentration: response.data.data.NO2.concentration,
-          NO2_aqi: response.data.data.NO2.aqi,
-          status: getAirQualityStatus(response.data.data.overall_aqi).label,
-          risk: getAirQualityStatus(response.data.data.overall_aqi).risk,
-        };
+        setWeatherData(response.data.dataWeather);
+        setAirData(response.data.dataAirQuality);
+        setCityData(response.data.dataCity);
+        console.log(response.data.dataCity);
+        return response.data.dataCity;
       })
-      .then((dataToSave) => {
-        return axios.post(`${apiUrl}/api/air-quality`, dataToSave);
+      .then((dataToSaveCities) => {
+        console.log(dataToSaveCities);
+        return axios.post(`${apiUrl}/api/cities`, dataToSaveCities); //Save City
       })
-      .then((saveResponse) => {
-        return axios.get(`${apiUrl}/api/air-quality-historical`);
+      .then((responseSaveCities) => {
+        console.log(responseSaveCities);
+        //if save responseSaveCities
+        return axios.post(`${apiUrl}/api/cities`, weatherData); //Save weather
       })
-      .then((historyResponse) => {
-        setHistory(historyResponse.data.data);
+      .then((responseSaveWeather) => {
+        console.log(responseSaveWeather);
+        //if save responseSaveWeather
+        return axios.post(`${apiUrl}/api/air-quality`, airData); //Save air-quality
+      })
+      .then((responseSaveAirQuality) => {
+        console.log(responseSaveAirQuality);
+        //All Ok
+        setShowData(true);
+        return;
       })
       .catch((error) => {
-        setError("Something went wrong. Please try another city.");
+        setError("Something went wrong.");
+        setShowData(false);
       })
       .finally(() => {
         setLoading(false);
@@ -93,7 +85,13 @@ export const Form = ({
 
   return (
     <>
-      <Paper shadow="md" radius="lg" p="xl" mb="xl">
+      <Paper
+        shadow="md"
+        radius="lg"
+        p="xl"
+        mb="xl"
+        style={semiTransparentPanel}
+      >
         <Stack align="center" spacing="md">
           <Title align="center" order={1}>
             Air Quality Checker
@@ -108,8 +106,8 @@ export const Form = ({
             <TextInput
               label="City"
               placeholder="Example: Sydney, Tokyo, Lima"
-              value={city}
-              onChange={(event) => setCity(event.currentTarget.value)}
+              value={searchedCity}
+              onChange={(event) => setSearchedCity(event.currentTarget.value)}
               style={{ width: 300 }}
             />
 

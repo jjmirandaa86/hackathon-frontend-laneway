@@ -1,5 +1,6 @@
 import React from "react";
 import { Badge, Card, Grid, Text, Title } from "@mantine/core";
+import { semiTransparentPanel } from "../js/helpers";
 
 const airQualityLevels = [
   {
@@ -43,7 +44,14 @@ const airQualityLevels = [
 export const AirQualityInfo = () => {
   return (
     <div>
-      <Card shadow="md" radius="lg" p="xl" mb="xl" withBorder>
+      <Card
+        shadow="md"
+        radius="lg"
+        p="xl"
+        mb="xl"
+        withBorder
+        style={semiTransparentPanel}
+      >
         <Title order={3} mb="xs">
           Air Quality Index Guide
         </Title>
@@ -55,7 +63,13 @@ export const AirQualityInfo = () => {
         <Grid>
           {airQualityLevels.map((level) => (
             <Grid.Col span={4} key={level.label}>
-              <Card withBorder radius="md" p="md" h="100%">
+              <Card
+                withBorder
+                radius="md"
+                p="md"
+                h="100%"
+                style={semiTransparentPanel}
+              >
                 <Badge color={level.color} mb="sm">
                   AQI {level.range}
                 </Badge>

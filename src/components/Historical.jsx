@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 
 import { Card, Title, Text, Table } from "@mantine/core";
+import { semiTransparentPanel } from "../js/helpers";
 
 export const Historical = ({ history, setHistory, apiUrl }) => {
   useEffect(() => {
@@ -12,7 +13,7 @@ export const Historical = ({ history, setHistory, apiUrl }) => {
 
   return (
     <>
-      <Card shadow="md" radius="lg" p="xl" withBorder>
+      <Card shadow="md" radius="lg" p="xl" withBorder style={semiTransparentPanel}>
         <Title order={3} mb="md">
           Search History (Last 10 searches)
         </Title>

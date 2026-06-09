@@ -1,11 +1,19 @@
 import React from "react";
 import { Card, Group, Title, Text, Badge, Paper, Grid } from "@mantine/core";
+import { semiTransparentPanel } from "../js/helpers";
 
 export const Details = ({ airData, status, searchedCity }) => {
   return (
     <>
       {airData && status && (
-        <Card shadow="lg" radius="lg" p="xl" mb="xl" withBorder>
+        <Card
+          shadow="lg"
+          radius="lg"
+          p="xl"
+          mb="xl"
+          withBorder
+          style={semiTransparentPanel}
+        >
           <Group position="apart" mb="md">
             <div>
               <Title order={2}>{searchedCity}</Title>
@@ -17,8 +25,8 @@ export const Details = ({ airData, status, searchedCity }) => {
             </Badge>
           </Group>
 
-          <Paper p="lg" radius="md" bg={`${status.color}.1`} mb="lg">
-            <Title order={3}>AQI: {airData.overall_aqi}</Title>
+          <Paper p="lg" radius="md" mb="lg" style={semiTransparentPanel}>
+            <Title order={3}>AQI: {airData.data?.overall_aqi}</Title>
             <Text size="lg" weight={600}>
               Human Health Risk:
             </Text>
@@ -32,7 +40,7 @@ export const Details = ({ airData, status, searchedCity }) => {
           <Grid>
             {["CO", "NO2", "O3", "SO2", "PM2.5", "PM10"].map((item) => (
               <Grid.Col span={4} key={item}>
-                <Card withBorder radius="md" p="md">
+                <Card withBorder radius="md" p="md" style={semiTransparentPanel}>
                   <Text weight={700}>{item}</Text>
                   <Text size="sm">
                     Concentration: {airData.data[item]?.concentration} µg/m³

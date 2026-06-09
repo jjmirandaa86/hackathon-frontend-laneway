@@ -47,4 +47,17 @@ function getAirQualityStatus(aqi) {
     };
   }
 
-  export {getAirQualityStatus};
+function getAqiBackgroundImage(aqi) {
+  if (aqi <= 50) return "/assets/1good.png";
+  if (aqi <= 100) return "/assets/2moderate.png";
+  if (aqi <= 150) return "/assets/3unhealthy.png";
+  if (aqi <= 200) return "/assets/4unhealthy.png";
+  if (aqi <= 300) return "/assets/5veryunhealthy.png";
+  return "/assets/6hazardous.png";
+}
+
+const semiTransparentPanel = {
+  backgroundColor: "rgba(255, 255, 255, 0.5)",
+};
+
+export { getAirQualityStatus, getAqiBackgroundImage, semiTransparentPanel };

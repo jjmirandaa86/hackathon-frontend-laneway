@@ -12,22 +12,37 @@ import { Form } from "./components/Form.jsx";
 import { Details } from "./components/Details.jsx";
 import { Historical } from "./components/Historical.jsx";
 import { AirQualityInfo } from "./components/AirQualityInfo.jsx";
+import { AqiBackground } from "./components/AqiBackground.jsx";
+import { Weather } from "./components/Weather.jsx";
+import { semiTransparentPanel } from "./js/helpers";
+import GeneralDetails from "./components/GeneralDetails.jsx";
 
 function App() {
-  const [city, setCity] = useState("");
-  const [airData, setAirData] = useState(null);
   const [searchedCity, setSearchedCity] = useState("");
-  const [history, setHistory] = useState([]);
+
+  const [showData, setShowData] = useState(null); //show all cards
+
+  const [cityData, setCityData] = useState(null);
+  const [airData, setAirData] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [status, setStatus] = useState(null);
-  const [showInfo, setShowInfo] = useState(false);
+
+  const [showInfoAirData, setShowInfoAirData] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <AppShell
-        padding="md"
+        padding={0}
+        styles={{
+          main: {
+            background: "transparent",
+            position: "relative",
+          },
+        }}
         header={
           <Header height={70} p="md">
             <Group position="apart">
@@ -36,41 +51,55 @@ function App() {
           </Header>
         }
       >
-        <Container size="lg">
-          <Form
-            city={city}
-            setCity={setCity}
-            loading={loading}
-            setLoading={setLoading}
-            error={error}
-            setError={setError}
-            airData={airData}
-            setAirData={setAirData}
-            setSearchedCity={setSearchedCity}
-            history={history}
-            setHistory={setHistory}
-            apiUrl={apiUrl}
-            setStatus={setStatus}
-          />
+        <AqiBackground aqi={airData?.data?.overall_aqi} />
+        <div style={{ position: "relative", minHeight: "calc(100vh - 70px)" }}>
+          <Container
+            size="lg"
+            p="md"
+            style={{ position: "relative", zIndex: 1, ...semiTransparentPanel }}
+          >
+            <Form
+              showData={showData}
+              setShowData={setShowData}
+              searchedCity={searchedCity}
+              setSearchedCity={setSearchedCity}
+              error={error}
+              setError={setError}
+              loading={loading}
+              setLoading={setLoading}
+              cityData={cityData}
+              setCityData={setCityData}
+              weatherData={weatherData}
+              setWeatherData={setWeatherData}
+              airData={airData}
+              setAirData={setAirData}
+              apiUrl={apiUrl}
+            />
+            {showData && <GeneralDetails />}
 
-          <Details
-            airData={airData}
-            status={status}
-            searchedCity={searchedCity}
-          />
-          <Container fluid h={50}>
-            <Button onClick={() => setShowInfo(!showInfo)}>
-              {showInfo ? "Hide AQI guide" : "Show AQI guide"}
-            </Button>
+            {/*
+<Details
+              airData={airData}
+              status={status}
+              searchedCity={searchedCity}
+            />
+            <Container fluid h={50} style={semiTransparentPanel}>
+              <Button onClick={() => setShowInfo(!showInfo)}>
+                {showInfo ? "Hide AQI guide" : "Show AQI guide"}
+              </Button>
+            </Container>
+
+            {airData && weatherData && <Weather weatherData={weatherData} />}
+
+            {showInfo && <AirQualityInfo />}
+            <Historical
+              history={history}
+              setHistory={setHistory}
+              apiUrl={apiUrl}
+            />
+              */}
           </Container>
-
-          {showInfo && <AirQualityInfo />}
-          <Historical
-            history={history}
-            setHistory={setHistory}
-            apiUrl={apiUrl}
-          />
-        </Container>
+        </div>
       </AppShell>
     </MantineProvider>
   );
